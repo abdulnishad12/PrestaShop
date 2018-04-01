@@ -44,7 +44,6 @@ class CommonClient {
       .waitForExist(selector, timeout)
   }
 
-
   goToSubtabMenuPage(menuSelector, selector) {
     return this.client
       .waitForExist(menuSelector, 90000)
@@ -291,15 +290,15 @@ class CommonClient {
   }
 
   pause(timeout) {
-    return this.client.pause(timeout)
+    return this.client.pause(timeout);
   }
 
   keys(button) {
-    return this.client.keys(button)
+    return this.client.keys(button);
   }
 
   alertAccept() {
-    return this.client.alertAccept()
+    return this.client.alertAccept();
   }
 
   showElement(className, order) {
@@ -314,6 +313,34 @@ class CommonClient {
       .pause(2000)
       .isVisible(selector)
       .then((isVisible) => expect(isVisible).to.be.false)
+  }
+  /**
+   * This function allows you to search for a data when the filter input exist
+   * @param selector filter selector
+   * @param data : searching data
+   * @returns {*}
+   */
+  search(selector, data) {
+    if (global.isVisible) {
+      return this.client
+        .waitAndSetValue(selector, data)
+        .keys('Enter');
+    } else {
+      return this.client
+        .pause(0);
+    }
+  }
+
+  checkExistence(selector, data, pos) {
+    if (global.isVisible) {
+      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    } else {
+      return this.client.getText(selector.replace('%ID', pos-1)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    }
   }
 
   editObjectData(object) {
@@ -332,6 +359,72 @@ class CommonClient {
 
   deleteObjectElement(object, pos) {
     delete object[pos];
+  }
+
+  /**
+   * This function searches the data in the table in case a filter input exists
+   * @param selector
+   * @param data
+   * @returns {*}
+   */
+  search(selector, data) {
+    if (global.isVisible) {
+      return this.client
+        .waitAndSetValue(selector, data)
+        .keys('Enter');
+    } else {
+      return this.client.pause(0);
+    }
+  }
+
+  /**
+   * This function checks the search result
+   * @param selector
+   * @param data
+   * @param pos
+   * @returns {*}
+   */
+  checkExistence(selector, data, pos) {
+    if (global.isVisible) {
+      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    } else {
+      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    }
+  }
+
+  /**
+   * This function checks the search result
+   * @param selector editor body selector
+   * @param content
+   * @returns {*}
+   */
+  setTextToEditor(selector, content) {
+    return this.client
+      .click(selector)
+      .execute(function (content) {
+        return (tinyMCE.activeEditor.setContent(content));
+      }, content);
+  }
+
+  editObjectData(object, type = '') {
+    for(let key in object) {
+      if(object.hasOwnProperty(key) && key !== 'type') {
+        if (typeof object[key] === 'string') {
+          parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
+        } else if (typeof object[key] === 'number') {
+          object[key] += 10;
+        } else if (typeof object[key] === 'object'){
+          this.editObjectData(object[key]);
+        }
+      }
+      if(type !== '') {
+        object['type'] = type;
+      }
+    }
   }
 }
 

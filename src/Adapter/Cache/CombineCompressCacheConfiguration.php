@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
@@ -83,9 +82,9 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'smart_cache_css' => $this->configuration->get('PS_CSS_THEME_CACHE'),
-            'smart_cache_js' => $this->configuration->get('PS_JS_THEME_CACHE'),
-            'apache_optimization' => $this->configuration->get('PS_HTACCESS_CACHE_CONTROL'),
+            'smart_cache_css' => $this->configuration->getBoolean('PS_CSS_THEME_CACHE'),
+            'smart_cache_js' => $this->configuration->getBoolean('PS_JS_THEME_CACHE'),
+            'apache_optimization' => $this->configuration->getBoolean('PS_HTACCESS_CACHE_CONTROL'),
         );
     }
 
@@ -127,17 +126,11 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired(
-            array(
-                'smart_cache_css',
-                'smart_cache_js',
-                'apache_optimization',
-            )
+        return isset(
+            $configuration['smart_cache_css'],
+            $configuration['smart_cache_js'],
+            $configuration['apache_optimization']
         );
-        $resolver->resolve($configuration);
-
-        return true;
     }
 
     /**

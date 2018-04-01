@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -1496,7 +1497,10 @@ class FrontControllerCore extends Controller
         $urls['actions'] = array(
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
         );
-
+        
+        $imageRetriever = new ImageRetriever($this->context->link);
+        $urls['no_picture_image'] =  $imageRetriever->getNoPictureImage($this->context->language);
+        
         return $urls;
     }
 
@@ -1711,7 +1715,11 @@ class FrontControllerCore extends Controller
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
         $params = array();
-        parse_str($_SERVER['QUERY_STRING'], $params);
+        $paramsFromUri = '';
+        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+            $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
+        }
+        parse_str($paramsFromUri, $params);
 
         if (null !== $extraParams) {
             foreach ($extraParams as $key => $value) {

@@ -26,10 +26,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
+/**
+ * Manages the configuration data about notifications options.
+ */
 class NotificationsConfiguration implements DataConfigurationInterface
 {
     /**
@@ -48,9 +49,9 @@ class NotificationsConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'show_notifs_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS'),
-            'show_notifs_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS'),
-            'show_notifs_new_messages' => $this->configuration->get('PS_SHOW_NEW_MESSAGES'),
+            'show_notifs_new_orders' => $this->configuration->getBoolean('PS_SHOW_NEW_ORDERS'),
+            'show_notifs_new_customers' => $this->configuration->getBoolean('PS_SHOW_NEW_CUSTOMERS'),
+            'show_notifs_new_messages' => $this->configuration->getBoolean('PS_SHOW_NEW_MESSAGES'),
         );
     }
 
@@ -75,17 +76,10 @@ class NotificationsConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired(
-                array(
-                    'show_notifs_new_orders',
-                    'show_notifs_new_customers',
-                    'show_notifs_new_messages',
-                )
-            );
-        $resolver->resolve($configuration);
-
-        return true;
+        return isset(
+            $configuration['show_notifs_new_orders'],
+            $configuration['show_notifs_new_customers'],
+            $configuration['show_notifs_new_messages']
+        );
     }
 }

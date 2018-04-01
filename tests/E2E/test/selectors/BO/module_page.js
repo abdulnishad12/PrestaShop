@@ -42,17 +42,28 @@ module.exports = {
     rollback_version: '//*[@id="restoreBackupContainer"]//option[2]',
     rollback_button: '//*[@id="rollback"]',
     success_msg: '(//p[contains(@class,"alert-success")])[1]/p',
-    modules_number: '[class="module-sorting-search-wording"]',
     module_list: '//*[@id="modules-list-container-all"]/div[%I]',
     sort_select: '//select[contains(@class,"sort-component")]',
     maintenance_shop: '//*[@id="currentConfiguration"]//input[contains(@name,"putUnderMaintenance")]',
     confirm_maintenance_shop_icon: '(//*[@id="currentConfiguration"]//img)[5]',
     enable_module: '(//button[contains(@class,"module_action_menu_enable")])[1]',
     reset_module: '//*[@id="modules-list-container-native"]//button[contains(@class, "module_action_menu_reset")]',
-    reset_button: '//*[@id="module-modal-confirm-welcome-reset"]//a[contains(@class, "module_action_modal_reset")]',
+    reset_button: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
     backdrop_modale:'//div[contains(@class, "fade show")]',
     //List of modules after search
     list_module: '//*[@id="modules-list-container-all"]/div[%I]',
-    modules_number: '[class="module-sorting-search-wording"]'
+    modules_number: '[class="module-sorting-search-wording"]',
+
+    //List of modules in notifications tab
+    configure_module: '//*[@id="modules-list-container-notification"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
+    modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
+    notification_number: '//*[@id="head_tabs"]//span[@class="notification-counter"]',
+
+    ModuleBankTransferPage: {
+      account_owner_input: '//*[@id="BANK_WIRE_OWNER"]',
+      account_details_textarea: '//*[@id="BANK_WIRE_DETAILS"]',
+      bank_address_textarea: '//*[@id="BANK_WIRE_ADDRESS"]',
+      save_button: '//*[@id="module_form_submit_btn"]'
+    }
   }
 };

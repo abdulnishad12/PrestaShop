@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
@@ -65,8 +64,8 @@ class DebugModeConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'disable_non_native_modules' => $this->configuration->get('PS_DISABLE_NON_NATIVE_MODULE'),
-            'disable_overrides' => $this->configuration->get('PS_DISABLE_OVERRIDES'),
+            'disable_non_native_modules' => $this->configuration->getBoolean('PS_DISABLE_NON_NATIVE_MODULE'),
+            'disable_overrides' => $this->configuration->getBoolean('PS_DISABLE_OVERRIDES'),
             'debug_mode' => $this->debugMode->isDebugModeEnabled(),
         );
     }
@@ -128,17 +127,11 @@ class DebugModeConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired(
-            array(
-                'disable_non_native_modules',
-                'disable_overrides',
-                'debug_mode',
-            )
+        return isset(
+            $configuration['disable_non_native_modules'],
+            $configuration['disable_overrides'],
+            $configuration['debug_mode']
         );
-        $resolver->resolve($configuration);
-
-        return true;
     }
 
     /**

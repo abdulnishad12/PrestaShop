@@ -44,7 +44,7 @@ interface FormHandlerInterface
      * @param array $data data retrieved from form that need to be persisted in database
      * @throws \Exception if the data can't be handled
      *
-     * @return void
+     * @return array $errors if data can't persisted an array of errors messages
      */
     public function save(array $data);
 }
